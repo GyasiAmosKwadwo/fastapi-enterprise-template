@@ -47,9 +47,6 @@ restart: ## Restart all services
 	docker-compose restart
 	@echo "${GREEN}All services restarted!${RESET}"
 
-logs:
-	docker-compose logs -f
-
 logs: ## View logs from all services
 	docker-compose logs -f
 
@@ -73,34 +70,34 @@ ps: ## List running containers
 # Database Commands
 # ============================================================================
 init-db: ## Initialize database tables
-	python scripts/init_db.py
+	docker-compose exec -T -u $$(id -u):$$(id -g) -e PYTHONPATH=/app api python scripts/init_db.py
 	@echo "${GREEN}Database initialized!${RESET}"
 
 migrate: ## Run database migrations
-	alembic upgrade head
+	docker-compose exec -T -u $$(id -u):$$(id -g) api alembic upgrade head
 	@echo "${GREEN}Migrations applied!${RESET}"
 
 migrate-create: ## Create new migration
 	@read -p "Enter migration message: " msg; \
-	alembic revision --autogenerate -m "$$msg"
+	docker-compose exec -T -u $$(id -u):$$(id -g) api alembic revision --autogenerate -m "$$msg"
 	@echo "${GREEN}Migration created!${RESET}"
 
 migrate-rollback: ## Rollback last migration
-	alembic downgrade -1
+	docker-compose exec -T -u $$(id -u):$$(id -g) api alembic downgrade -1
 	@echo "${YELLOW}Rolled back last migration${RESET}"
 
 migrate-history: ## View migration history
-	alembic history
+	docker-compose exec -T -u $$(id -u):$$(id -g) api alembic history
 
 migrate-current: ## Show current migration version
-	alembic current
+	docker-compose exec -T -u $$(id -u):$$(id -g) api alembic current
 
 seed: ## Seed database with initial data
-	python scripts/seed_data.py
+	docker-compose exec -T -u $$(id -u):$$(id -g) -e PYTHONPATH=/app api python scripts/seed_data.py
 	@echo "${GREEN}Database seeded with demo data!${RESET}"
 
 seed-permissions: ## Seed permissions and roles
-	docker-compose exec api python scripts/seed_permissions.py
+	docker-compose exec -T -u $$(id -u):$$(id -g) -e PYTHONPATH=/app api python scripts/seed_permissions.py
 	@echo "${GREEN}Permissions and roles seeded!${RESET}"
 
 db-shell: ## Open PostgreSQL shell

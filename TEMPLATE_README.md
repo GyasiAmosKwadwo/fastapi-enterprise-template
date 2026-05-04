@@ -1,119 +1,190 @@
-# Backend Template Playbook
+# Backend Template Guide
 
-This guide shows how to turn this codebase into a reusable GitHub template and how to use it for every new backend project.
+This repository is a reusable FastAPI backend template for new products.
 
-## Goal
+Use this guide to:
+1. Start a new backend quickly.
+2. Understand what is already included.
+3. Customize the template safely for your own domain.
 
-Use this architecture repeatedly without copy-paste drift, while keeping shared modules like authentication, roles/permissions, and notifications maintainable.
+## What This Template Already Includes
 
-## Architecture Pattern to Keep
+- FastAPI app with versioned API routing (`/api/v1/...`).
+- Layered architecture:
+  - API endpoints (`app/api/v1/endpoints`)
+  - Services (`app/services`)
+  - Repositories (`app/repositories`)
+  - Models and schemas (`app/models`, `app/schemas`)
+  - Core infrastructure (`app/core`)
+- Authentication foundations:
+  - JWT session flow
+  - Role-based access control (roles and permissions)
+  - Password reset flow
+  - 2FA endpoints (TOTP/SMS flow support)
+- Async workers with Celery + RabbitMQ.
+- Redis for sessions/cache.
+- PostgreSQL with Alembic migrations.
+- ELK stack services in Docker (`elasticsearch`, `logstash`, `kibana`).
+- Nginx container for edge/proxy setup.
+- Makefile commands for common development workflows.
 
-This project follows a layered pattern:
+## Tech Stack
 
-1. `API` layer: `app/api/v1/endpoints`
-2. `Service` layer: `app/services`
-3. `Repository` layer: `app/repositories`
-4. `Domain` layer: `app/models` + `app/schemas`
-5. `Infrastructure` layer: `app/core`, `app/tasks`, `app/integrations`
+- Python 3.11
+- FastAPI
+- SQLAlchemy (async) + AsyncPG
+- Alembic
+- Redis
+- RabbitMQ + Celery + Flower
+- PostgreSQL 15
+- Docker Compose
 
-## Strategy (Recommended)
+## Quick Start
 
-Use both:
-
-1. A GitHub template repository for quick project startup.
-2. A shared internal package for reusable modules (`auth`, `rbac`, `notifications`).
-
-Why both:
-
-1. Template gives speed.
-2. Shared package prevents long-term module drift.
-
-## Maintenance Model
-
-Template inheritance gives you a starting snapshot. It does not auto-sync later changes.
-
-Use this split:
-
-1. Inherited once from template: `docker-compose.yml`, Makefile commands, base folder structure, CI workflow skeleton.
-2. Centrally maintained across projects: auth, RBAC, notifications, and shared infra helpers via a versioned shared package.
-
-## Phase 1: Prepare This Repo for Template Use
-
-1. Create a cleanup branch.
+1. Copy env values.
 ```bash
-git checkout -b chore/template-hardening
-```
-2. Remove project-specific branding from docs and env values.
-3. Add or update `.env.example` with safe placeholders only.
-4. Keep default scripts every project needs: `make dev`, `make up`, `make migrate`, `make test`.
-5. Ensure seed scripts are generic enough for reuse.
-6. Commit.
-
-## Domain Cleanup Pass (Important)
-
-Before publishing the template, remove or rename any domain-specific modules you do not want in every new project.
-
-Common candidates in this repo:
-
-1. `app/integrations/ghana_card.py`
-2. `app/integrations/ghana_post_gps.py`
-3. `app/integrations/xds_data.py`
-4. `app/models/vettingForm.py`
-5. Domain-focused workflow routes/services tied to vetting/background checks
-
-After removing modules, also update:
-
-1. `app/api/v1/router.py` imports
-2. `app/tasks/*` task includes
-3. `requirements.txt` for unused dependencies
-
-## Phase 2: Publish as a GitHub Template
-
-1. Push repository to GitHub.
-2. Open repository `Settings`.
-3. Enable `Template repository`.
-4. Rename repository to something reusable, for example `fastapi-enterprise-template`.
-5. Add topics: `fastapi`, `template`, `rbac`, `celery`, `postgres`, `redis`.
-
-## Phase 3: Create a Shared Core Package
-
-Create a private repo for shared modules, for example `platform-core`.
-
-1. Move reusable code into modules such as `platform_core/auth`, `platform_core/rbac`, `platform_core/notifications`.
-2. Keep business-specific features in each app repo.
-3. Version the package using semantic versions.
-4. Publish to private package registry (GitHub Packages or internal index).
-5. Install it in each new project via `requirements.txt` or `pyproject.toml`.
-
-## Phase 4: Starting a New Project from Template
-
-1. Click `Use this template` on GitHub.
-2. Create the new repo.
-3. Clone it and copy env file.
-```bash
-git clone git@github.com:your-org/your-new-api.git
-cd your-new-api
 cp .env.example .env
 ```
-4. Update app metadata and environment variables.
-5. Start local stack and migrations.
+2. Start the local stack.
 ```bash
+make up
+```
+3. Apply database migrations.
+```bash
+make migrate
+```
+4. Seed default admin and demo data.
+```bash
+make seed
+make seed-permissions
+```
+
+## Local URLs
+
+- API: `http://localhost:8000`
+- Swagger Docs: `http://localhost:8000/api/v1/docs`
+- ReDoc: `http://localhost:8000/api/v1/redoc`
+- Health: `http://localhost:8000/health`
+- Flower: `http://localhost:5555`
+- Kibana: `http://localhost:5601`
+- PostgreSQL host port: `localhost:5433`
+
+## Seeded Admin Account
+
+Default seeded admin credentials:
+- Email: `admin@example.com`
+- Password: `Admin@123`
+
+Important:
+- Seed scripts now enable TOTP 2FA for admin users.
+- `make seed` logs the admin TOTP secret so you can add it to Google Authenticator (or any TOTP app) before login verification.
+
+## API Surface Included By Default
+
+All routes are mounted under `/api/v1`.
+
+- `/auth` for login and 2FA actions
+- `/password` for forgot/reset/change flows
+- `/roles` for role and permission management
+- `/notifications` for notification operations
+- `/admin` for admin user and audit operations
+- `/users` for authenticated user profile actions
+
+## Useful Make Commands
+
+- `make up` / `make down` / `make restart`
+- `make logs` / `make logs-api` / `make logs-db`
+- `make migrate` / `make migrate-create` / `make migrate-rollback`
+- `make seed` / `make seed-permissions`
+- `make test` / `make coverage`
+- `make lint` / `make format`
+
+## Project Structure
+
+```text
+app/
+  api/
+  core/
+  integrations/
+  models/
+  repositories/
+  schemas/
+  services/
+  tasks/
+alembic/
+docker/
+scripts/
+tests/
+```
+
+## How To Use This As a GitHub Template
+
+1. Push this repository to your GitHub organization.
+2. Enable `Settings -> Template repository`.
+3. Create new repos via `Use this template`.
+4. For each new project:
+```bash
+git clone <new-repo-url>
+cd <new-repo>
+cp .env.example .env
 make up
 make migrate
 make seed
-```
-6. Run tests.
-```bash
-make test
+make seed-permissions
 ```
 
-## New Project Bootstrap Checklist
+## Customizations You Should Do For Every New Project
 
-1. Repo created from template
-2. `.env` configured
-3. Database and Redis running
-4. Migrations applied
-5. Base permissions seeded
-6. Admin user created
-7. CI pipeline green
-8. Project-specific endpoints added
+1. Product identity:
+- Update `APP_NAME`, API descriptions, and ownership metadata.
+- Replace placeholder secrets and external credentials in `.env`.
+
+2. Domain modules:
+- Keep generic modules.
+- Replace/remove domain-specific integrations or workflows you do not need.
+- Add your project-specific models, services, and endpoints.
+
+3. Auth and access policy:
+- Define your real role catalog and permissions.
+- Update seed scripts for your org’s initial users/roles.
+- Tune lockout/session/2FA policies in config.
+
+4. Infrastructure profile:
+- Keep only required services in `docker-compose.yml`.
+- Adjust ports, memory limits, and health checks.
+- Decide whether ELK is needed for local development.
+
+5. Data model and migrations:
+- Create project entities in `app/models` and `app/schemas`.
+- Generate Alembic revisions with `make migrate-create`.
+- Keep migrations small and reviewed.
+
+6. Background jobs:
+- Replace example Celery tasks with your own async workflows.
+- Separate high-priority vs low-priority jobs if needed.
+
+7. Quality and CI:
+- Add/adjust tests in `tests/`.
+- Enforce linting/type-checking in CI.
+- Add deployment workflows and environment-specific gates.
+
+## Recommended First Week Checklist For New Projects
+
+1. Rename service and update environment defaults.
+2. Remove unused integrations and example flows.
+3. Define base domain entities and generate migrations.
+4. Configure real auth roles and permission matrix.
+5. Wire one core business endpoint end-to-end.
+6. Add at least one integration and one background task.
+7. Add integration tests for auth + one business path.
+8. Finalize staging deployment pipeline.
+
+## Troubleshooting Notes
+
+- If migrations fail with host resolution errors, run migrations through the provided Makefile commands (they execute inside Docker where service hostnames resolve).
+- If login returns `Login is only permitted for users with 2FA enabled.`, re-run `make seed` to ensure seeded admin 2FA fields are set.
+- If role/permission seeding was partially run, `make seed-permissions` is idempotent and safe to rerun.
+
+## Final Notes
+
+Treat this repository as a strong starting point, not a fixed product. Keep shared conventions stable, but aggressively replace domain-specific examples with your own business logic.
