@@ -2,6 +2,13 @@
 
 A comprehensive, production-ready web-based platform for automating background checks and clearance investigations in Ghana.
 
+## Template Setup Guide
+
+If you want to use this architecture as a reusable starter for future projects, follow:
+
+- `TEMPLATE_README.md` for the end-to-end template workflow
+- `.env.example` for environment variable setup
+
 ## 🚀 Features
 
 - **Multi-Role Authentication**: Administrator, Client, and Applicant roles with RBAC

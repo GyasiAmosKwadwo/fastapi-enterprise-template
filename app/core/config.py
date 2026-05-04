@@ -1,9 +1,8 @@
 import json
 import os
 from functools import lru_cache
-from typing import Any, List, Optional
+from typing import List, Optional
 
-from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -15,10 +14,6 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     API_VERSION: str = "v1"
     ALLOWED_EXTENSIONS: str = "pdf,jpg,jpeg,png,doc,docx"
-
-    @property
-    def allowed_extensions_list(self):
-        return [ext.strip() for ext in self.ALLOWED_EXTENSIONS.split(",")]
 
     # ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
 
