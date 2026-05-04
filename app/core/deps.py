@@ -70,10 +70,3 @@ async def get_current_active_admin(current_user: User = Depends(get_current_user
     if current_user.role != UserRole.ADMINISTRATOR:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough privileges")
     return current_user
-
-
-async def get_current_client(current_user: User = Depends(get_current_user)) -> User:
-    """Require client role"""
-    if current_user.role not in [UserRole.CLIENT, UserRole.ADMINISTRATOR]:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough privileges")
-    return current_user

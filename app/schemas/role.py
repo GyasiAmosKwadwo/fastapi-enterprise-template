@@ -30,7 +30,6 @@ class RoleBase(BaseModel):
     code: str
     description: Optional[str] = None
     is_admin_role: bool = False
-    is_client_role: bool = False
 
 
 class RoleCreate(RoleBase):

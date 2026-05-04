@@ -50,7 +50,7 @@ cors_origins = _parse_list_env("CORS_ORIGINS", ["http://localhost:3000"])
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
     # Startup
-    logger.info("Starting BCCI System...")
+    logger.info(f"Starting {settings.APP_NAME}...")
     setup_logging()
     await init_db()
     logger.info("Database initialized")
@@ -58,12 +58,12 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    logger.info("Shutting down BCCI System...")
+    logger.info(f"Shutting down {settings.APP_NAME}...")
 
 
 app = FastAPI(
     title=settings.APP_NAME,
-    description="Background Checks & Clearance Investigations System",
+    description="Reusable FastAPI backend template",
     version=settings.API_VERSION,
     docs_url=f"/api/{settings.API_VERSION}/docs",
     redoc_url=f"/api/{settings.API_VERSION}/redoc",

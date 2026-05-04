@@ -32,9 +32,8 @@ env/
 *.swo
 
 # Environment
-.env
-.env.local
-.env.*.local
+.env*
+!.env.example
 
 # Logs
 logs/
@@ -46,6 +45,7 @@ logs/
 
 # Uploads
 uploads/
+!uploads/
 !uploads/.gitkeep
 
 # Testing

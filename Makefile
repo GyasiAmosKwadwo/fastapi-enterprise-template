@@ -20,7 +20,7 @@ help:
 	@echo "  make format        - Format code"
 	@echo "  make migrate       - Run database migrations"
 	@echo "  make seed          - Seed database with initial data"
-	@echo '${GREEN}BCCI System - Available Commands${RESET}'
+	@echo '${GREEN}Backend Template - Available Commands${RESET}'
 	@echo ''
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "${YELLOW}%-20s${RESET} %s\n", $$1, $$2}'
 
@@ -104,11 +104,11 @@ seed-permissions: ## Seed permissions and roles
 	@echo "${GREEN}Permissions and roles seeded!${RESET}"
 
 db-shell: ## Open PostgreSQL shell
-	docker-compose exec postgres psql -U bcci_user -d bcci_db
+	docker-compose exec postgres psql -U app_user -d app_db
 
 db-backup: ## Backup database
 	@mkdir -p backups
-	@docker-compose exec -T postgres pg_dump -U bcci_user bcci_db > backups/bcci_backup_$$(date +%Y%m%d_%H%M%S).sql
+	@docker-compose exec -T postgres pg_dump -U app_user app_db > backups/app_backup_$$(date +%Y%m%d_%H%M%S).sql
 	@echo "${GREEN}Database backed up to backups/${RESET}"
 
 db-restore: ## Restore database from backup (use: make db-restore FILE=backup.sql)
@@ -116,7 +116,7 @@ db-restore: ## Restore database from backup (use: make db-restore FILE=backup.sq
 		echo "${YELLOW}Please specify backup file: make db-restore FILE=backup.sql${RESET}"; \
 		exit 1; \
 	fi
-	docker-compose exec -T postgres psql -U bcci_user -d bcci_db < $(FILE)
+	docker-compose exec -T postgres psql -U app_user -d app_db < $(FILE)
 	@echo "${GREEN}Database restored from $(FILE)${RESET}"
 
 # ============================================================================
@@ -309,7 +309,7 @@ create-admin: ## Create admin user interactively
 # ============================================================================
 quick-start: install up init-db migrate seed seed-permissions ## Quick start for new setup
 	@echo "${GREEN}==================================================${RESET}"
-	@echo "${GREEN}BCCI System is ready!${RESET}"
+	@echo "${GREEN}Backend Template is ready!${RESET}"
 	@echo "${GREEN}==================================================${RESET}"
 	@echo ""
 	@echo "API: http://localhost:8000"
@@ -318,7 +318,7 @@ quick-start: install up init-db migrate seed seed-permissions ## Quick start for
 	@echo "Kibana: http://localhost:5601"
 	@echo ""
 	@echo "Default Admin Credentials:"
-	@echo "Email: admin@bcci-system.com"
+	@echo "Email: admin@example.com"
 	@echo "Password: Admin@123"
 	@echo ""
 	@echo "${YELLOW}IMPORTANT: Change default passwords in production!${RESET}"

@@ -6,7 +6,19 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
-from app.models.associations import user_roles
+
+# Association table for user-role many-to-many relationship
+user_roles = Table(
+    "user_roles",
+    Base.metadata,
+    Column(
+        "user_id", UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column(
+        "role_id", UUID(as_uuid=True), ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column("assigned_at", DateTime, default=datetime.utcnow),
+)
 
 # Association table for role-permission many-to-many relationship
 role_permissions = Table(
@@ -56,7 +68,6 @@ class Role(Base):
     # Role type
     is_system_role = Column(Boolean, default=False)  # Cannot be deleted if True
     is_admin_role = Column(Boolean, default=False)
-    is_client_role = Column(Boolean, default=False)
 
     # Status
     is_active = Column(Boolean, default=True)

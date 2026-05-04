@@ -4,8 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserProfileUpdate
-import uuid
-from typing import Optional
 
 
 class UserService:
@@ -31,31 +29,3 @@ class UserService:
 
     async def get_user_by_id(self, user_id: int) -> User:
         return await self.user_repo.get_by_id(user_id)
-
-
-    async def get_all_staff(self, skip: int = 0, limit: int = 100) -> list[User]:
-        return await self.user_repo.get_all_staff(skip, limit)
-
-    async def get_staff_by_id(self, user_id: uuid.UUID) -> Optional[User]:
-        return await self.user_repo.get_staff_by_id(user_id)
-
-    async def get_all_clients(self, skip: int = 0, limit: int = 100) -> list[User]:
-        return await self.user_repo.get_all_clients(skip, limit)
-
-    async def get_client_by_id(self, user_id: uuid.UUID) -> Optional[User]:
-        #return await self.user_repo.get_client_by_id
-        client = await self.user_repo.get_by_id(user_id)
-        number_of_applicants = await self.user_repo.get_number_of_applicants(user_id)
-
-        client.number_of_applicants = number_of_applicants
-
-        return client
-
-        #(user_id)
-"""
-    async def get_all_agencies(self, skip: int = 0, limit: int = 100) -> list[User]:
-        return await self.user_repo.get_all_agencies(skip, limit)
-
-    async def get_agency_by_id(self, user_id: uuid.UUID) -> Optional[User]:
-        return await self.user_repo.get_agency_by_id(user_id)
-"""

@@ -32,7 +32,6 @@ class RoleService:
             "code": data.code,
             "description": data.description,
             "is_admin_role": data.is_admin_role,
-            "is_client_role": data.is_client_role,
             "created_by_id": created_by_id,
             "is_system_role": False,
         }
@@ -58,7 +57,7 @@ class RoleService:
 
         return created_role
 
-    async def update_role(self, role_id: int, data: RoleUpdate) -> Role:
+    async def update_role(self, role_id: uuid.UUID, data: RoleUpdate) -> Role:
         """Update role and permissions"""
         role = await self.role_repo.get_with_permissions(role_id)
 
@@ -84,7 +83,7 @@ class RoleService:
         await self.db.refresh(role)
         return role
 
-    async def delete_role(self, role_id: int) -> bool:
+    async def delete_role(self, role_id: uuid.UUID) -> bool:
         """Delete role"""
         role = await self.role_repo.get_by_id(role_id)
 

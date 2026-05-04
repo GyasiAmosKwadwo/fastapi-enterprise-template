@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "bcci-system"
+name = "backend-template"
 version = "0.1.0"
-description = "Background Checks & Clearance Investigations System"
+description = "Reusable FastAPI backend template"
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 

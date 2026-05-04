@@ -37,13 +37,6 @@ class RoleRepository(BaseRepository[Role]):
         )
         return list(result.scalars().all())
 
-    async def get_client_roles(self) -> List[Role]:
-        """Get all client roles"""
-        result = await self.db.execute(
-            select(Role).where(Role.is_client_role == True).where(Role.is_active == True)
-        )
-        return list(result.scalars().all())
-
 
 class PermissionRepository(BaseRepository[Permission]):
     def __init__(self, db: AsyncSession):
