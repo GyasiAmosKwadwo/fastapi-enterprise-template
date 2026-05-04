@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Application
-    APP_NAME: str = "BCCI"
+    APP_NAME: str = "Backend Template"
     APP_ENV: str = "development"
     DEBUG: bool = True
     SECRET_KEY: str
@@ -49,12 +49,12 @@ class Settings(BaseSettings):
     OTP_EXPIRE_MINUTES: int = 5
 
     # External APIs
-    XDS_DATA_API_KEY: str
-    XDS_DATA_BASE_URL: str
-    GHANA_CARD_API_KEY: str
-    GHANA_CARD_BASE_URL: str
-    GHANA_POST_GPS_BASE_URL: str
-    GOOGLE_MAPS_API_KEY: str
+    XDS_DATA_API_KEY: Optional[str] = None
+    XDS_DATA_BASE_URL: Optional[str] = None
+    GHANA_CARD_API_KEY: Optional[str] = None
+    GHANA_CARD_BASE_URL: Optional[str] = None
+    GHANA_POST_GPS_BASE_URL: Optional[str] = None
+    GOOGLE_MAPS_API_KEY: Optional[str] = None
 
     # File Upload
     MAX_UPLOAD_SIZE: int = 10485760  # 10MB
@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str
     EMAIL_FROM: str
 
-    RABBITMQ_USER: str = "bcci_rmq"
+    RABBITMQ_USER: str = "app_rmq"
     RABBITMQ_PASS: str = "rmq_pass"
     RABBITMQ_HOST: str = "rabbitmq"
     RABBITMQ_PORT: int = 5672
@@ -84,7 +84,7 @@ class Settings(BaseSettings):
     MAX_LOGIN_ATTEMPTS: int = 5
     LOCKOUT_DURATION_MINUTES: int = 30
 
-    SUPPORT_EMAIL: str = "support@bcci-system.com"
+    SUPPORT_EMAIL: str = "support@example.com"
 
     # CORS
     # CORS_ORIGINS: str = ["http://localhost:3000"]

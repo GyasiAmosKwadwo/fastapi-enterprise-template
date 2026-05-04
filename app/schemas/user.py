@@ -17,7 +17,6 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
-    client_id: Optional[int] = None
 
     @validator("password")
     def validate_password(cls, v):
@@ -71,48 +70,6 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class StaffResponse(UserResponse):
-    id: uuid.UUID
-    email: str
-    first_name: str
-    last_name: str
-    phone_number: Optional[str]
-    is_active: bool
-    two_factor_enabled: bool
-    last_login: Optional[datetime]
-
-class ClientResponse(UserResponse):
-    id: uuid.UUID
-    email: str
-    first_name: str
-    last_name: str
-    phone_number: Optional[str]
-    is_active: bool
-    two_factor_enabled: bool
-    last_login: Optional[datetime]
-    corporate_name: Optional[str] = None
-    corporate_phone_number: Optional[str] = None
-    corporate_email: Optional[str] = None
-    corporate_address: Optional[str] = None
-    number_of_applicants: Optional[int] = None
-
-"""
-class AgencyResponse(UserResponse):
-    id: uuid.UUID
-    name: str
-    type: str
-    official_domain: str
-    address: str
-    email: str
-    phone_number: Optional[str]
-    is_active: bool
-    two_factor_enabled:bool
-    last_login: Optional[datetime]
-    
-    class Config:
-        from_attributes = True
-"""
-
 class Pagination(BaseModel):
     page: int
     per_page: int
@@ -124,14 +81,4 @@ class Pagination(BaseModel):
 
 class UsersListResponse(BaseModel):
     items: List[UserResponse]
-    pagination: Pagination
-
-
-class ClientsListResponse(BaseModel):
-    items: List[ClientResponse]
-    pagination: Pagination
-
-
-class StaffListResponse(BaseModel):
-    items: List[StaffResponse]
     pagination: Pagination

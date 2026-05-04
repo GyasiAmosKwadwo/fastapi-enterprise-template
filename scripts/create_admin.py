@@ -24,7 +24,7 @@ from app.models.user import User, UserRole
 
 # Email: admin@company.com
 #   Name: John Doe
-#   Phone: +233244123456
+#   Phone: +15551234567
 #   Role: Super Administrator
 # Password: Password@12123
 
@@ -57,7 +57,7 @@ def validate_password(password: str) -> tuple[bool, str]:
 async def create_admin_user():
     """Interactive admin user creation"""
     print("=" * 60)
-    print("BCCI System - Create Administrator User")
+    print("Backend Template - Create Administrator User")
     print("=" * 60)
     print()
 
@@ -119,7 +119,7 @@ async def create_admin_user():
                 print("❌ Last name is required")
 
             # Get phone number (optional)
-            phone_number = input("Phone number (optional, e.g., +233244000000): ").strip() or None
+            phone_number = input("Phone number (optional, e.g., +15550000000): ").strip() or None
 
             # Confirm
             print()

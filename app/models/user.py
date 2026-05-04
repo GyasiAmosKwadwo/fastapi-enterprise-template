@@ -1,20 +1,19 @@
 import enum
 import uuid
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
-from app.models.associations import user_roles
+from app.models.role import user_roles
 
 # from datetime import datetime
 
 
 class UserRole(str, enum.Enum):
     ADMINISTRATOR = "administrator"
-    CLIENT = "client"
     APPLICANT = "applicant"
     #STAFF = "staff"
     #AGENCY = "agency"
@@ -48,10 +47,6 @@ class User(Base):
     locked_until = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), server_default=func.now())
-
-    # Relationships
-    client_id = Column(UUID(as_uuid=True), ForeignKey("clients.id"), nullable=True)
-    client = relationship("Client", back_populates="users")
 
     audit_logs = relationship(
         "AuditLog",

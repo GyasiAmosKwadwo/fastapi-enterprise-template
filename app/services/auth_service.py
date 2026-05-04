@@ -101,7 +101,7 @@ class AuthService:
             is_first_time=is_first_time,
         )
 
-    async def logout(self, token: str, user_id: int) -> None:
+    async def logout(self, token: str, user_id) -> None:
         """Logout user and invalidate session"""
         # Delete session
         session_key = f"session:{user_id}:{token}"

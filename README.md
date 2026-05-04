@@ -1,6 +1,6 @@
-# BCCI System - Background Checks & Clearance Investigations
+# Backend Service Template
 
-A comprehensive, production-ready web-based platform for automating background checks and clearance investigations in Ghana.
+A reusable, production-ready FastAPI backend starter with layered architecture, auth/RBAC foundations, async workers, and infrastructure defaults.
 
 ## Template Setup Guide
 
@@ -9,6 +9,10 @@ If you want to use this architecture as a reusable starter for future projects, 
 - `TEMPLATE_README.md` for the end-to-end template workflow
 - `.env.example` for environment variable setup
 
+## Domain-Specific Notes
+
+Some modules in this bootstrap are domain examples (for example, parts of `app/integrations` and vetting/report workflows). Keep what you need and replace/remove the rest for your product domain.
+
 ## 🚀 Features
 
 - **Multi-Role Authentication**: Administrator, Client, and Applicant roles with RBAC
@@ -16,10 +20,9 @@ If you want to use this architecture as a reusable starter for future projects, 
 - **Async Processing**: RabbitMQ + Celery for background tasks
 - **Real-time Caching**: Redis for session management and caching
 - **External Integrations**:
-  - XDS Data Ghana (Credit Bureau)
-  - Ghana Card Validation (NIA)
-  - Ghana Post GPS (Digital Addressing)
-  - Google Maps (Geolocation)
+  - Pluggable third-party adapters (included examples can be replaced)
+  - Identity/verification API integration pattern
+  - Geocoding/location API integration pattern
 - **Automated Report Generation**: PDF reports with executive summaries
 - **Comprehensive Logging**: ELK Stack integration
 - **CI/CD**: GitHub Actions for automated testing and deployment
@@ -38,8 +41,8 @@ If you want to use this architecture as a reusable starter for future projects, 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/bcci-system.git
-cd bcci-system
+git clone https://github.com/your-org/backend-template.git
+cd backend-template
 ```
 
 ### 2. Environment Setup
@@ -366,8 +369,8 @@ make test
 For issues and questions:
 
 - **Issues**: GitHub Issues
-<!-- - **Email**: support@bcci-system.com
-- **Documentation**: [docs.bcci-system.com](https://docs.bcci-system.com) -->
+<!-- - **Email**: support@backend-template.com
+- **Documentation**: [docs.backend-template.com](https://docs.backend-template.com) -->
 
 ## 🎯 Roadmap
 
@@ -402,8 +405,8 @@ For issues and questions:
 
 ```bash
 # 1. Clone and setup
-git clone https://github.com/your-org/bcci-system.git
-cd bcci-system
+git clone https://github.com/your-org/backend-template.git
+cd backend-template
 cp .env.example .env
 
 # 2. Start services
@@ -455,7 +458,7 @@ docker-compose ps postgres
 docker-compose logs postgres
 
 # Connect to database
-docker-compose exec postgres psql -U bcci_user -d bcci_db
+docker-compose exec postgres psql -U app_user -d app_db
 ```
 
 ### Redis Connection Issues

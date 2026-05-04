@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,6 +15,7 @@ from app.services.auth_service import AuthService
 from app.services.two_factor_service import TwoFactorService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+bearer_scheme = HTTPBearer()
 
 
 @router.post("/login", response_model=LoginResponse)
@@ -122,12 +124,12 @@ async def enable_2fa(
 
 @router.post("/logout")
 async def logout(
-    token: str = Depends(get_current_user),
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ):
     """Logout endpoint"""
     auth_service = AuthService(db, redis)
-    await auth_service.logout(token, user.id)
+    await auth_service.logout(credentials.credentials, user.id)
     return {"message": "Logged out successfully"}
