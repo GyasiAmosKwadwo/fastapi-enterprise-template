@@ -15,6 +15,7 @@ import asyncio
 from getpass import getpass
 
 from loguru import logger
+import pyotp
 from sqlalchemy import select
 
 from app.core.database import AsyncSessionLocal
@@ -140,6 +141,7 @@ async def create_admin_user():
             # Create user
             logger.info("Creating admin user...")
             security = SecurityService()
+            totp_secret = pyotp.random_base32()
 
             user = User(
                 email=email,
@@ -150,7 +152,9 @@ async def create_admin_user():
                 role=UserRole.ADMINISTRATOR,
                 is_active=True,
                 is_verified=True,
-                two_factor_enabled=False,
+                two_factor_enabled=True,
+                two_factor_method="totp",
+                two_factor_secret=totp_secret,
             )
 
             db.add(user)
@@ -185,6 +189,8 @@ async def create_admin_user():
             print(f"Role: {user.role}")
             if super_admin_role:
                 print(f"Custom Roles: Super Administrator")
+            print("2FA: Enabled (TOTP)")
+            print(f"TOTP Secret: {totp_secret}")
             print()
             print("You can now login with these credentials.")
             print("=" * 60)
